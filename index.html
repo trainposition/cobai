@@ -1,0 +1,190 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <title>WEBGIS Perjalanan Kereta Api</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet" type="text/css" />    
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />   
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.0/leaflet.awesome-markers.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link href="example_2.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="dist/leaflet-panel-layers-master/src/leaflet-panel-layers.css" />
+    <link rel="stylesheet" href="dist/sidebar-v2-master/css/leaflet-sidebar.css" />
+
+    <style>
+    #title_container {
+        z-index: 10000;
+        position: fixed;
+        left: 100px;
+    }
+
+    body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+    h1 {
+        font-size: 36px;
+        font-weight: 300;
+        line-height: 1.1;
+    }
+
+    .datetimeControl p {
+        margin: 0;
+        font-size: 16px;
+    }
+    .icon {
+        display: inline-block;
+        margin: 2px;
+        height: 16px;
+        width: 16px;
+        background-color: #ccc;
+    }
+    /* ICONS */
+    .icon-bar {
+        background: url('dist/leaflet-panel-layers-master/examples/images/icons/bar.png') center center no-repeat;
+    }
+
+    .icon-drinking_water {
+        background: url('dist/leaflet-panel-layers-master/examples/images/icons/drinking_water.png') center center no-repeat;
+    }
+    </style>
+</head>
+
+<body>
+    <!--<div id="title_container">
+        <h1>Example 2</h1>
+        <p>LeafletPlayback with custom interface</p>
+    </div>
+-->
+    <div id="map"></div>
+
+    <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>    
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.js"></script>    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.0/leaflet.awesome-markers.js"></script>
+
+    <script src="dist/leaflet.ajax.js"></script>
+    <script src="dist/leaflet-panel-layers-master/src/leaflet-panel-layers.js"></script>
+    <script src="dist/sidebar-v2-master/js/sidebar_coba.js"></script>
+
+    <script src="dist/LeafletPlayback.js"></script>
+    <script src="data/kereta.js"></script>
+    
+    <script src="example_2_control.js"></script>
+    <script src="example_2.js"></script>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+    <nav>
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                <li><a href="#jadwal" role="tab"><i class="fa fa-train"></i></a></li>
+                <li><a href="#legend" role="tab"><i class="fa fa-map-signs"></i></a></li>
+            </ul>
+
+            <ul role="tablist">
+                <li><a href="#index.html"><i class="fa fa-home" style="font-size:20px"></i></a></li>
+                <li><a href="#peta.html"><i class="fa fa-map-o" style="font-size:20px"></i></a></li>
+                <li><a href="#index.html#tabs2-8"><i class="fa fa-pencil-square-o" style="font-size:20px"></i></a></li>
+                <li><a href="#index.html#footer2-3"><i class="fa fa-address-book" style="font-size:1px"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">
+                    Legenda
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+                <span id="layercontrol"></span>
+            </div>
+
+            <div class="sidebar-pane" id="profile">
+                <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+
+            <div class="sidebar-pane" id="jadwal">
+                <h1 class="sidebar-header">
+                    Jadwal GAPEKA 2021
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    <h6>Pencarian jadwal berdasarkan kereta</h6> 
+                    <h4 style="text-align:center">Yogyakarta - Jakarta</h4>
+                      <span class="btn btn-primary btn-sm" onClick="toggle2();">KA Taksaka Pagi (83) <i class="fa fa-caret-down"></i></span>
+                        <br>
+                        <table border="2" id="hidethis2" style="display:none;">
+                        <tr>
+                          <th>No.</th>
+                          <th>Nama Stasiun</th>
+                          <th>Tiba</th>
+                          <th>Berangkat</th>
+                          <th>Zoom</th>
+                        </tr>
+                        <tr>
+                          <td>1</td>    <td>Yogyakarta </td>    <td>-</td>  <td>09.00</td>
+                        <td id= "zoomke1"></td>
+                        </tr>
+                        <tr>
+                          <td>2</td>    <td>Kutoarjo</td>   <td>09.52</td>  <td>09.55</td>
+                          <td id= "zoomke2"></td>
+                        </tr>
+                        <tr>
+                          <td>3</td>    <td>Kebumen </td>   <td>10.21</td>  <td>10.23</td>
+                          <td id= "zoomke3"></td>
+                        </tr>
+                        <tr>
+                          <td>4</td>    <td>Kroya</td>  <td>11.07</td>  <td>11.10</td>
+                          <td id= "zoomke4"></td>
+                        </tr>
+                        <tr>
+                          <td>5</td>    <td>Purwokerto</td> <td>11.37</td>  <td>11.45</td>
+                          <td id= "zoomke5"></td>
+                        </tr>
+                        <tr>
+                          <td>6</td>    <td>Cirebon</td>    <td>13.37</td>  <td>13.44</td>
+                          <td id= "zoomke6"></td>
+                        </tr>
+                        <tr>
+                          <td>7</td>    <td>Jatinegara</td> <td>16.24</td>  <td>16.27</td>
+                          <td id= "zoomke7"></td>
+                        </tr>
+                        <tr>
+                          <td>8</td>    <td>Gambir </td>    <td>16.42</td>  <td>-</td>
+                          <td id= "zoomke8"></td>
+                        </tr>
+                        </table>
+                        <br>
+                        <ul><li>Sumber : GAPEKA 2019</li></ul> <br>
+                        <ul><li>Berlaku sejak 1 Desember 2019</li></ul>
+            </div>
+
+            <div class="sidebar-pane" id="tweets">
+                <h1 class="sidebar-header">KOMPLAIN<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+        </div>        
+    </nav>
+    </div>
+
+</body>
+<script>
+  function toggle2() {
+   if( document.getElementById("hidethis2").style.display=='none' ){
+     document.getElementById("hidethis2").style.display = 'table-row'; // set to table-row instead of an empty string
+   }else{
+     document.getElementById("hidethis2").style.display = 'none';
+   }
+  }
+</script>
+
+</html>
